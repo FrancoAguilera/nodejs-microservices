@@ -1,0 +1,90 @@
+version: "3"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.27
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9200" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+    networks:
+      - backend_network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cap_add:
+      - IPC_LOCK
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backend_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ
+      - "15672:15672" # (Web UI)
+    networks:
+      - backend_network
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+      - elasticsearch
+    restart: on-failure
+    networks:
+      - backend_network
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    container_name: worker
+    depends_on:
+      - rabbitmq
+      - elasticsearch
+    restart: on-failure
+    networks:
+      - backend_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  backend_network:
+    driver: bridge
