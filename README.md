@@ -24,7 +24,7 @@
 
 ## Production
 ```bash
-docker compose -f docker-compose.yaml up --build
+docker compose up --build
 ```
 And you should be ready to go
 
