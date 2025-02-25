@@ -1,3 +1,11 @@
+import { Connection, Channel, Replies } from "amqplib";
+
+export type RabbitMQConnection = {
+  connection: Connection;
+  channel: Channel;
+  queue: Replies.AssertQueue;
+}
+
 export enum Status {
   PENDING = "PENDING",
   PROCESSING = "PROCESSING",
