@@ -1,5 +1,7 @@
 # Tech challenge
 
+## Assessment
+[Instructions](./Node_Js_Challenge.pdf)
 
 ## Development
 
