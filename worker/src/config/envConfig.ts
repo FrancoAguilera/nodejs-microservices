@@ -12,4 +12,4 @@ export const config = {
   ELASTICSEARCH_INDEX: process.env.ELASTICSEARCH_INDEX || "order_logs",
   ACCESS_TOKEN: process.env.ACCESS_TOKEN || "secret_access_token",
   API_REST_URL: process.env.API_REST_URL || "http://backend:3000"
-};
+} as const;

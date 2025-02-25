@@ -16,4 +16,4 @@ export const config = {
   ELASTICSEARCH_URL: process.env.ELASTICSEARCH_URL || "http://elasticsearch:9200",
   ELASTICSEARCH_INDEX: process.env.ELASTICSEARCH_INDEX || "order_logs",
   ACCESS_TOKEN: process.env.ACCESS_TOKEN || "secret_access_token",
-};
+} as const;

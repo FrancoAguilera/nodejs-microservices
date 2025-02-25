@@ -11,7 +11,7 @@ export const validateOrderInput = (req: Request, res: Response, next: NextFuncti
 };
 
 export const validateOrderStatus = (req: Request, res: Response, next: NextFunction) => {
-  const { status, orderId: _id } = req.body;
+  const { status } = req.body;
   if (!Object.values(Status).includes(status)) {
     return res.status(401).json({ message: 'status value not allowed' });
   }
